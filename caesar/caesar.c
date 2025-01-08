@@ -27,17 +27,16 @@ void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length)
 		char curr_char = tolower(*ptr);
 		if (curr_char != *ptr) was_upper = true;
 
-		char *char_alphab_ptr;
-		int char_alphab_idx;
+		char *char_alphab_ptr = NULL;
+		int char_alphab_idx = 0;
 
 		char_alphab_ptr = strchr(alphabet, curr_char);
 		char_alphab_idx = (int)(char_alphab_ptr - alphabet);
-		int char_shift_idx = char_alphab_idx + shift;
 		
-		if (char_shift_idx < 0) char_shift_idx += alphabet_length;
-		else if (char_shift_idx >= alphabet_length) char_shift_idx -= alphabet_length;
+		int char_shift_idx = char_alphab_idx + shift;
+		char_shift_idx = (char_shift_idx + alphabet_length) % alphabet_length;
 
-		char new_char;
+		char new_char = '\0';
 		new_char = alphabet[char_shift_idx];
 		printf("curr_char: %c, alpha_index: %d, shift_index: %d, new_char: %c\n", curr_char, char_alphab_idx, char_shift_idx, new_char);
 		
@@ -49,8 +48,6 @@ void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length)
 
 		ptr++;
 	}
-
-	printf("\n");
 
 	return;
 }
@@ -79,7 +76,11 @@ int main() {
 	while (true) {
 		printf("Shift: ");
 		fflush(stdout);
-		scanf("%d", &shift); 
+		if (scanf("%d", &shift) != 1) {
+			printf("- Error with scanf(): %s.\n", strerror(errno));
+			free(text_line);
+			return -1;
+		} 
 		if (shift < -alphabet_length || shift > alphabet_length) {
 			printf("- Shift must be between %d and %d.\n", -alphabet_length, alphabet_length);
 			continue;	
