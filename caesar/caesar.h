@@ -8,12 +8,19 @@
 #include "../utils/input.h"
 
 
+// definitions
 #define ALPHABET_EN "abcdefghijklmnopqrstuvwxyz";
 
+#define ARGINPUT_STDIN "STDIN"
+#define ARGINPUT_FILE "FILE"
 
+
+// function declarations
 char shiftCharacter(char c, int shift, char *alphabet, int alphabet_length);
 void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length);
 
+
+// function definitions
 
 char shiftCharacter(char c, int shift, char *alphabet, int alphabet_length) {
 	char shifted_char = '\0';	// shifted char default to NULL character

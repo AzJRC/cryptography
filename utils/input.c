@@ -28,8 +28,18 @@ int getIntInput(int *input, char *prompt) {
 	if (prompt == NULL) printPrompt("Integer:");
 	else printPrompt(prompt);
 
-	fflush(stdout);
 	if (scanf("%d", input) != 1) return -1;
+
+	return 0;
+}
+
+
+int getFileInput(char *path, FILE *fptr, char *prompt) {
+	if (prompt == NULL) printPrompt("File:");
+	else printPrompt(prompt);
+
+	fptr = fopen(path, "r");
+	if (fptr == NULL) return -1;
 
 	return 0;
 }
