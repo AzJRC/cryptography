@@ -1,4 +1,4 @@
-#include "dep/caesar.h"
+#include "caesar.h"
 
 
 void runVigenereCipher(char *line, char *key, char *alphabet, int alphabet_length) {
