@@ -17,11 +17,10 @@
 
 // function declarations
 char shiftCharacter(char c, int shift, char *alphabet, int alphabet_length);
-void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length);
+void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length, bool verbose);
 
 
 // function definitions
-
 char shiftCharacter(char c, int shift, char *alphabet, int alphabet_length) {
 	char shifted_char = '\0';	// shifted char default to NULL character
 	
@@ -40,8 +39,7 @@ char shiftCharacter(char c, int shift, char *alphabet, int alphabet_length) {
 }
 
 
-void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length) {	
-	
+void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length, bool verbose) {
 	int was_upper = false;
 	char *ptr = line;
 
@@ -65,8 +63,8 @@ void runCaesarCipher(char *line, int shift, char *alphabet, int alphabet_length)
 		} else {
 			*ptr = new_char;
 		}
-
-		printf("curr_char: %c -> new_char: %c\n", curr_char, new_char);
+		
+		if (verbose) printf("curr_char: %c -> [shfited] new_char: %c\n", curr_char, new_char);	
 		ptr++;
 	}
 

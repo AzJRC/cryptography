@@ -2,6 +2,7 @@
 #include "caesar.h"
 #include <argp.h>
 
+
 // argparser logic
 static char doc[] =
 	"Application that encrypts plaintext using the Caesar cipher.";
@@ -49,28 +50,48 @@ int main(int argc, char *argv[]) {
 	int alphabet_length = strlen(alphabet);
 	if (arguments.verbose) printf("* alphabet [%s:%d] loaded.", alphabet, alphabet_length); 
 
-	// get plaintext input from user input	
+	// get plaintext or filepath from user input	
 	char *input = NULL;
-	if (strcmp(arguments.input, ARGINPUT_STDIN) == 0) {
-		int text_length = getStringInput(&input, NULL);
-		if (text_length < 0) return -1;
-	} else if (strcmp(arguments.input, ARGINPUT_FILE) == 0) {
-		// TODO
+	char *input_prompt = NULL;
+	if (strcmp(arguments.input, ARGINPUT_STDIN) == 0)
+		input_prompt = "Plaintext:";
+	else if (strcmp(arguments.input, ARGINPUT_FILE) == 0) 
+		input_prompt = "Filepath:";
+
+	int file_length = getStringInput(&input, input_prompt);
+	if (file_length < 0) return -1;
+
+	FILE *fptr = NULL;
+	if (strcmp(arguments.input, ARGINPUT_FILE) == 0) {
+		int file_length = openFile(input, &fptr);
+		if (file_length < 0) return -1;
 	}
 	
 	// get shift from user input
 	int shift = 0;
 	int success = getIntInput(&shift, NULL);	
 	if (success < 0) return -1;
-
-	// verify shift is between the range
 	if (shift < -alphabet_length || shift > alphabet_length) {
+		// verify shift is between the range
 		printf("- Shift must be between %d and %d.\n", -alphabet_length, alphabet_length);
 		return -1;	
 	}
-	
-	runCaesarCipher(input, shift, alphabet, alphabet_length);
-	printf("Cipheredtext: %s.\n", input);
+
+	// run the caesar cipher depending on the input type
+	if (strcmp(arguments.input, ARGINPUT_STDIN) == 0) {
+		runCaesarCipher(input, shift, alphabet, alphabet_length, arguments.verbose);
+		printf("Ciphertext: %s.\n", input);
+	} else if (strcmp(arguments.input, ARGINPUT_FILE) == 0) {
+		while (true) {
+			int result = getLineFromFile(fptr, &input);
+			if (result < 0) return -1;
+			if (result == 0) break;
+			
+			input[result - 1] = '\0';
+			runCaesarCipher(input, shift, alphabet, alphabet_length, arguments.verbose);
+			printf("Ciphertext: %s.\n", input);
+		}
+	}
 	
 	free(input);  //getline() requires us to free the allocated memory.
 	return 0;

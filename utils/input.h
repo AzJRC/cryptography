@@ -9,5 +9,7 @@
 void printPrompt(char const *prompt);
 int getStringInput(char **input, char* prompt);
 int getIntInput(int *input, char *prompt);
+int openFile(char *path, FILE **fptr);
+int getLineFromFile(FILE *fptr, char **line);
 
 #endif // INPUT_H
